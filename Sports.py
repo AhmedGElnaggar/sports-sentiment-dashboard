@@ -11,6 +11,6 @@ app = Flask(__name__)
 CORS(app)
  
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTBALL_API_KEY = "YOUR_API_KEY"  # Get free key at football-data.org
+FOOTBALL_API_KEY = ""
 FOOTBALL_BASE    = "https://api.football-data.org/v4"
 REDDIT_BASE      = "https://www.reddit.com"
