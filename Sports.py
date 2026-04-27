@@ -6,12 +6,15 @@ import time
 import os
 import threading
 from datetime import datetime
- 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
 CORS(app)
- 
-# ── CONFIG ────────────────────────────────────────────────────────────────────
-FOOTBALL_API_KEY = ""
+
+# CONFIG
+FOOTBALL_API_KEY = os.getenv("FOOTBALL_API_KEY", "")
 FOOTBALL_BASE    = "https://api.football-data.org/v4"
 REDDIT_BASE      = "https://www.reddit.com"
 
@@ -24,5 +27,5 @@ LEAGUES = {
     "WC":  {"name": "World Cup",         "flag": "🌍"},
 }
 REDDIT_SUBS = ["soccer", "PremierLeague", "laliga", "ChampionsLeague", "bundesliga"]
- 
+
 DB_PATH = "sports.db"
