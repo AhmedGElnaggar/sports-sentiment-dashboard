@@ -25,6 +25,7 @@ LEAGUES = {
     "BL1": {"name": "Bundesliga",        "flag": "🇩🇪"},
     "SA":  {"name": "Serie A",           "flag": "🇮🇹"},
     "WC":  {"name": "World Cup",         "flag": "🌍"},
+    "EPL": {"name": "Egyptian Premier League", "flag": " "},
 }
 REDDIT_SUBS = ["soccer", "PremierLeague", "laliga", "ChampionsLeague", "bundesliga"]
 
