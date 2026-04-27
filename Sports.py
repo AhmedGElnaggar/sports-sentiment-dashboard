@@ -29,3 +29,41 @@ LEAGUES = {
 REDDIT_SUBS = ["soccer", "PremierLeague", "laliga", "ChampionsLeague", "bundesliga"]
 
 DB_PATH = "sports.db"
+# DATABASE
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS matches (
+        id INTEGER PRIMARY KEY,
+        league TEXT,
+        home_team TEXT,
+        away_team TEXT,
+        home_score INTEGER,
+        away_score INTEGER,
+        status TEXT,
+        match_date TEXT,
+        fetched_at TEXT
+    )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS sentiment (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        subreddit TEXT,
+        title TEXT,
+        score INTEGER,
+        sentiment TEXT,
+        sentiment_score REAL,
+        fetched_at TEXT
+    )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS standings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        league TEXT,
+        position INTEGER,
+        team TEXT,
+        played INTEGER,
+        won INTEGER,
+        draw INTEGER,
+        lost INTEGER,
+        points INTEGER,
+        fetched_at TEXT
+    )''')
+    conn.commit()
+    conn.close()
