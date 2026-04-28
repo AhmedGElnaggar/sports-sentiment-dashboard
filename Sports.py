@@ -25,11 +25,12 @@ LEAGUES = {
     "BL1": {"name": "Bundesliga",        "flag": "🇩🇪"},
     "SA":  {"name": "Serie A",           "flag": "🇮🇹"},
     "WC":  {"name": "World Cup",         "flag": "🌍"},
-    "EPL": {"name": "Egyptian Premier League", "flag": " "},
+    "ELC": {"name": "Egyptian Premier League", "flag": "🇪🇬"},
 }
 REDDIT_SUBS = ["soccer", "PremierLeague", "laliga", "ChampionsLeague", "bundesliga"]
 
 DB_PATH = "sports.db"
+
 # DATABASE
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -68,3 +69,45 @@ def init_db():
     )''')
     conn.commit()
     conn.close()
+
+# ANALYSIS
+POSITIVE_WORDS = set([
+    "win","won","goal","great","amazing","brilliant","excellent","fantastic",
+    "superb","outstanding","perfect","best","love","incredible","awesome",
+    "champion","trophy","legend","top","class","quality","clinical","dominated",
+    "thrashed","hammered","destroyed","masterclass","unreal","fire"
+])
+NEGATIVE_WORDS = set([
+    "loss","lost","terrible","awful","worst","poor","bad","disappointing",
+    "disaster","pathetic","embarrassing","shocking","useless","rubbish","trash",
+    "sacked","relegated","crisis","failed","embarrassment","joke","clown"
+])
+
+def analyze_sentiment(text):
+    text_lower = text.lower()
+    words = text_lower.split()
+    pos = sum(1 for w in words if w in POSITIVE_WORDS)
+    neg = sum(1 for w in words if w in NEGATIVE_WORDS)
+    total = pos + neg
+    if total == 0:
+        return "neutral", 0.0
+    score = (pos - neg) / total
+    if score > 0.1:
+        return "positive", round(score, 2)
+    elif score < -0.1:
+        return "negative", round(score, 2)
+    return "neutral", round(score, 2)
+
+# Cache so we don't hammer the APIs on every request
+_matches_cache = {"data": {}, "timestamp": 0}
+_standings_cache = {"data": {}, "timestamp": 0}
+CACHE_TTL = 300  # 5 minutes feels reasonable for live scores
+
+def fetch_matches(league_code):
+    headers = {"X-Auth-Token": FOOTBALL_API_KEY}
+    try:
+        res = requests.get(
+            f"{FOOTBALL_BASE}/competitions/{league_code}/matches",
+            params={"status": "LIVE,FINISHED,SCHEDULED", "limit": 10},
+            headers=headers, timeout=10
+        )
