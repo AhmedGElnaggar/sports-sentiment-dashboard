@@ -184,3 +184,42 @@ def fetch_reddit_sentiment(subreddit):
     except Exception as e:
         print(f"Reddit error: {e}")
         return []
+
+# ROUTES
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/api/matches/<league_code>")
+def matches(league_code):
+    now = time.time()
+    if now - _matches_cache["timestamp"] < CACHE_TTL and league_code in _matches_cache["data"]:
+        return jsonify(_matches_cache["data"][league_code])
+    data = fetch_matches(league_code)
+    _matches_cache["data"][league_code] = data
+    _matches_cache["timestamp"] = now
+    return jsonify(data)
+
+@app.route("/api/standings/<league_code>")
+def standings(league_code):
+    now = time.time()
+    if now - _standings_cache["timestamp"] < CACHE_TTL and league_code in _standings_cache["data"]:
+        return jsonify(_standings_cache["data"][league_code])
+    data = fetch_standings(league_code)
+    _standings_cache["data"][league_code] = data
+    _standings_cache["timestamp"] = now
+    return jsonify(data)
+
+@app.route("/api/sentiment/<subreddit>")
+def sentiment(subreddit):
+    if subreddit not in REDDIT_SUBS:
+        return jsonify([])
+    return jsonify(fetch_reddit_sentiment(subreddit))
+
+@app.route("/api/leagues")
+def leagues():
+    return jsonify(LEAGUES)
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True, port=5001)
