@@ -111,3 +111,76 @@ def fetch_matches(league_code):
             params={"status": "LIVE,FINISHED,SCHEDULED", "limit": 10},
             headers=headers, timeout=10
         )
+        if res.status_code != 200:
+            return []
+        data = res.json()
+        matches = []
+        for m in data.get("matches", [])[:10]:
+            matches.append({
+                "id": m["id"],
+                "home": m["homeTeam"]["shortName"],
+                "away": m["awayTeam"]["shortName"],
+                "home_score": m["score"]["fullTime"]["home"],
+                "away_score": m["score"]["fullTime"]["away"],
+                "status": m["status"],
+                "date": m["utcDate"][:10],
+                "time": m["utcDate"][11:16],
+            })
+        return matches
+    except Exception as e:
+        print(f"Football API error: {e}")
+        return []
+
+def fetch_standings(league_code):
+    headers = {"X-Auth-Token": FOOTBALL_API_KEY}
+    try:
+        res = requests.get(
+            f"{FOOTBALL_BASE}/competitions/{league_code}/standings",
+            headers=headers, timeout=10
+        )
+        if res.status_code != 200:
+            return []
+        data = res.json()
+        table = data.get("standings", [{}])[0].get("table", [])
+        return [{
+            "pos": t["position"],
+            "team": t["team"]["shortName"],
+            "played": t["playedGames"],
+            "won": t["won"],
+            "draw": t["draw"],
+            "lost": t["lost"],
+            "points": t["points"],
+            "gd": t["goalDifference"],
+        } for t in table[:10]]
+    except Exception as e:
+        print(f"Standings error: {e}")
+        return []
+
+def fetch_reddit_sentiment(subreddit):
+    # Scrape Reddit's public JSON endpoint
+    try:
+        headers = {"User-Agent": "AE-Sports-Dashboard/1.0"}
+        res = requests.get(
+            f"{REDDIT_BASE}/r/{subreddit}/hot.json?limit=25",
+            headers=headers, timeout=10
+        )
+        if res.status_code != 200:
+            return []
+        posts = res.json().get("data", {}).get("children", [])
+        results = []
+        for p in posts[:15]:
+            d = p["data"]
+            title = d.get("title", "")
+            score = d.get("score", 0)
+            sentiment, s_score = analyze_sentiment(title)
+            results.append({
+                "title": title[:120],
+                "score": score,
+                "sentiment": sentiment,
+                "sentiment_score": s_score,
+                "url": f"https://reddit.com{d.get('permalink', '')}"
+            })
+        return results
+    except Exception as e:
+        print(f"Reddit error: {e}")
+        return []
