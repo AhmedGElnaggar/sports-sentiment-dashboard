@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>AE — Sports Pulse</title>
+    <title>AE — Sports</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
         :root {
@@ -24,6 +24,815 @@
             background:var(--bg);
             color:var(--text);
             min-height:100vh;
+            overflow-x:hidden;
         }
+
+        /* TOP BAR */
+        .topbar {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 28px;
+            height:56px;
+            background:rgba(8,10,13,0.95);
+            border-bottom:1px solid var(--border);
+            backdrop-filter:blur(20px);
+            position:sticky;
+            top:0;
+            z-index:100;
+        }
+        .logo {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:1.6rem;
+            letter-spacing:3px;
+            color:var(--accent);
+            cursor:pointer;
+        }
+        .logo span { color:var(--text); }
+        .live-badge {
+            display:flex;
+            align-items:center;
+            gap:6px;
+            font-size:0.7rem;
+            font-family:'DM Mono', monospace;
+            color:var(--red);
+            letter-spacing:2px;
+        }
+        .live-dot {
+            width:6px; height:6px;
+            border-radius:50%;
+            background:var(--red);
+            animation:pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0%,100%{opacity:1;transform:scale(1)}
+            50%{opacity:0.4;transform:scale(0.8)}
+        }
+
+        /* LEAGUE TABS */
+        .league-nav {
+            display:flex;
+            gap:4px;
+            padding:12px 28px;
+            background:var(--surface);
+            border-bottom:1px solid var(--border);
+            overflow-x:auto;
+        }
+        .league-tab {
+            padding:8px 20px;
+            border-radius:6px;
+            border:1px solid var(--border);
+            background:transparent;
+            color:var(--muted);
+            font-family:'DM Mono', monospace;
+            font-size:0.75rem;
+            letter-spacing:1px;
+            cursor:pointer;
+            transition:all 0.2s;
+            white-space:nowrap;
+        }
+        .league-tab:hover { border-color:var(--accent); color:var(--accent); }
+        .league-tab.active {
+            background:var(--accent);
+            color:#000;
+            border-color:var(--accent);
+            font-weight:600;
+        }
+
+        /* VIEWS */
+        .view { display:none; }
+        .view.active { display:block; }
+
+        /* MAIN LAYOUT */
+        .main {
+            display:grid;
+            grid-template-columns:1fr 380px;
+            gap:20px;
+            padding:20px 28px;
+            max-width:1400px;
+            margin:0 auto;
+        }
+        .left-panel { display:flex; flex-direction:column; gap:20px; }
+
+        /* SECTION HEADER */
+        .section-header {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:12px;
+        }
+        .section-title {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:1.1rem;
+            letter-spacing:3px;
+            color:var(--muted);
+        }
+        .section-line { flex:1; height:1px; background:var(--border); }
+
+        /* MATCHES */
+        .matches-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+            gap:10px;
+        }
+        .match-card {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:14px 16px;
+            transition:border-color 0.2s, transform 0.15s;
+            cursor:pointer;
+        }
+        .match-card:hover {
+            border-color:rgba(0,255,135,0.5);
+            transform:translateY(-2px);
+        }
+        .match-league {
+            font-size:0.65rem;
+            font-family:'DM Mono', monospace;
+            color:var(--muted);
+            letter-spacing:1px;
+            margin-bottom:10px;
+        }
+        .match-teams {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:8px;
+        }
+        .team-name { font-size:0.85rem; font-weight:600; flex:1; }
+        .team-name.away { text-align:right; }
+        .match-score {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:1.4rem;
+            letter-spacing:4px;
+            color:var(--accent);
+            min-width:60px;
+            text-align:center;
+        }
+        .match-status { margin-top:8px; font-size:0.65rem; font-family:'DM Mono', monospace; letter-spacing:1px; }
+        .status-live { color:var(--red); }
+        .status-finished { color:var(--muted); }
+        .status-scheduled { color:var(--accent2); }
+
+        /* STANDINGS */
+        .standings-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+        .standings-table th {
+            text-align:left; padding:6px 10px;
+            font-family:'DM Mono', monospace; font-size:0.65rem;
+            letter-spacing:1px; color:var(--muted);
+            border-bottom:1px solid var(--border);
+        }
+        .standings-table td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.03); }
+        .standings-table tr:hover td { background:var(--surface2); }
+        .pos-num { font-family:'DM Mono', monospace; color:var(--muted); width:28px; }
+        .pos-1 { color:var(--amber); font-weight:700; }
+        .pos-2, .pos-3, .pos-4 { color:var(--accent2); }
+        .pts { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--accent); letter-spacing:1px; }
+        .team-row { font-weight:500; }
+
+        /* SENTIMENT */
+        .sentiment-card {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:16px;
+            position:sticky;
+            top:76px;
+        }
+        .sub-tabs { display:flex; gap:4px; margin-bottom:14px; flex-wrap:wrap; }
+        .sub-tab {
+            padding:4px 10px; border-radius:4px;
+            border:1px solid var(--border); background:transparent;
+            color:var(--muted); font-family:'DM Mono', monospace;
+            font-size:0.65rem; letter-spacing:1px; cursor:pointer; transition:all 0.2s;
+        }
+        .sub-tab:hover { border-color:var(--accent); color:var(--accent); }
+        .sub-tab.active { background:var(--surface2); color:var(--text); border-color:var(--accent2); }
+        .sentiment-summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+        .sent-stat { background:var(--surface2); border-radius:6px; padding:10px; text-align:center; }
+        .sent-stat-num { font-family:'Bebas Neue', sans-serif; font-size:1.4rem; letter-spacing:2px; }
+        .sent-stat-label { font-size:0.6rem; font-family:'DM Mono', monospace; color:var(--muted); letter-spacing:1px; }
+        .positive-num { color:var(--accent); }
+        .negative-num { color:var(--red); }
+        .neutral-num { color:var(--muted); }
+        .post-list { display:flex; flex-direction:column; gap:6px; max-height:500px; overflow-y:auto; }
+        .post-item {
+            display:flex; gap:10px; padding:8px 10px;
+            background:var(--surface2); border-radius:6px;
+            border-left:3px solid transparent; cursor:pointer;
+            transition:all 0.15s; text-decoration:none; color:inherit;
+        }
+        .post-item:hover { background:rgba(255,255,255,0.05); }
+        .post-item.positive { border-left-color:var(--accent); }
+        .post-item.negative { border-left-color:var(--red); }
+        .post-item.neutral  { border-left-color:var(--muted); }
+        .post-title { font-size:0.75rem; line-height:1.4; flex:1; }
+        .post-score { font-family:'DM Mono', monospace; font-size:0.65rem; color:var(--muted); white-space:nowrap; }
+        .sentiment-bar-wrap { margin-bottom:14px; }
+        .sentiment-bar { height:6px; border-radius:3px; background:var(--surface2); overflow:hidden; display:flex; }
+        .bar-pos { background:var(--accent); transition:width 0.5s; }
+        .bar-neg { background:var(--red); transition:width 0.5s; }
+        .bar-neu { background:var(--muted); transition:width 0.5s; }
+        .bar-labels { display:flex; justify-content:space-between; margin-top:4px; font-size:0.6rem; font-family:'DM Mono', monospace; color:var(--muted); }
+
+        /* ── MATCH DETAIL VIEW ── */
+        #view-match {
+            padding: 28px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .back-btn {
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 16px;
+            border:1px solid var(--border);
+            border-radius:6px;
+            background:transparent;
+            color:var(--muted);
+            font-family:'DM Mono', monospace;
+            font-size:0.75rem;
+            letter-spacing:1px;
+            cursor:pointer;
+            margin-bottom:24px;
+            transition:all 0.2s;
+        }
+        .back-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+        .match-hero {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:14px;
+            padding:32px;
+            text-align:center;
+            margin-bottom:20px;
+        }
+        .match-hero-competition {
+            font-family:'DM Mono', monospace;
+            font-size:0.7rem;
+            letter-spacing:2px;
+            color:var(--muted);
+            margin-bottom:20px;
+        }
+        .match-hero-teams {
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:32px;
+        }
+        .hero-team {
+            flex:1;
+            font-size:1.6rem;
+            font-weight:700;
+            text-align:center;
+        }
+        .hero-team.away { text-align:center; }
+        .hero-score {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:5rem;
+            letter-spacing:8px;
+            color:var(--accent);
+            line-height:1;
+            min-width:160px;
+            text-align:center;
+        }
+        .hero-ht {
+            font-family:'DM Mono', monospace;
+            font-size:0.65rem;
+            color:var(--muted);
+            letter-spacing:1px;
+            margin-top:8px;
+        }
+        .hero-meta {
+            margin-top:16px;
+            display:flex;
+            justify-content:center;
+            gap:24px;
+            font-family:'DM Mono', monospace;
+            font-size:0.65rem;
+            color:var(--muted);
+            letter-spacing:1px;
+        }
+
+        .detail-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:16px;
+            margin-bottom:16px;
+        }
+        .detail-grid.three { grid-template-columns:1fr 1fr 1fr; }
+
+        .detail-card {
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:16px;
+        }
+        .detail-card-title {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:0.9rem;
+            letter-spacing:3px;
+            color:var(--muted);
+            margin-bottom:12px;
+        }
+
+        /* GOAL ITEM */
+        .goal-item {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+            padding:8px 0;
+            border-bottom:1px solid var(--border);
+        }
+        .goal-item:last-child { border-bottom:none; }
+        .goal-minute {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:1rem;
+            color:var(--accent);
+            min-width:36px;
+            letter-spacing:1px;
+        }
+        .goal-info { flex:1; }
+        .goal-scorer { font-weight:600; font-size:0.85rem; }
+        .goal-assist { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+        .goal-team-badge {
+            font-family:'DM Mono', monospace;
+            font-size:0.6rem;
+            color:var(--muted);
+            letter-spacing:1px;
+        }
+        .goal-type-pen { color:var(--amber); font-size:0.65rem; font-family:'DM Mono', monospace; }
+        .goal-type-og  { color:var(--red);   font-size:0.65rem; font-family:'DM Mono', monospace; }
+
+        /* BOOKING ITEM */
+        .booking-item {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:7px 0;
+            border-bottom:1px solid var(--border);
+            font-size:0.82rem;
+        }
+        .booking-item:last-child { border-bottom:none; }
+        .card-icon { font-size:1rem; }
+        .booking-minute {
+            font-family:'Bebas Neue', sans-serif;
+            font-size:1rem;
+            color:var(--amber);
+            min-width:36px;
+        }
+        .red-minute { color:var(--red); }
+
+        /* SUB ITEM */
+        .sub-item {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:7px 0;
+            border-bottom:1px solid var(--border);
+            font-size:0.8rem;
+        }
+        .sub-item:last-child { border-bottom:none; }
+        .sub-minute { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--accent2); min-width:36px; }
+        .sub-out { color:var(--red); }
+        .sub-in  { color:var(--accent); }
+        .sub-arrow { color:var(--muted); }
+
+        /* LINEUP */
+        .lineup-wrap { display:flex; gap:16px; }
+        .lineup-col { flex:1; }
+        .lineup-col-title {
+            font-family:'DM Mono', monospace;
+            font-size:0.65rem;
+            letter-spacing:1px;
+            color:var(--muted);
+            margin-bottom:8px;
+            text-align:center;
+        }
+        .player-item {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:5px 8px;
+            border-radius:5px;
+            font-size:0.78rem;
+            margin-bottom:3px;
+        }
+        .player-item:hover { background:var(--surface2); }
+        .player-shirt {
+            font-family:'DM Mono', monospace;
+            font-size:0.65rem;
+            color:var(--muted);
+            min-width:20px;
+            text-align:right;
+        }
+        .player-pos {
+            font-family:'DM Mono', monospace;
+            font-size:0.6rem;
+            color:var(--accent2);
+            min-width:28px;
+        }
+
+        .empty-state {
+            text-align:center;
+            padding:20px;
+            font-family:'DM Mono', monospace;
+            font-size:0.75rem;
+            color:var(--muted);
+            letter-spacing:1px;
+        }
+
+        .loading {
+            text-align:center;
+            padding:30px;
+            font-family:'DM Mono', monospace;
+            font-size:0.75rem;
+            color:var(--muted);
+            letter-spacing:2px;
+        }
+        .error { color:var(--red); }
+
+        ::-webkit-scrollbar { width:4px; height:4px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:var(--muted); border-radius:2px; }
     </style>
 </head>
+<body>
+
+<div class="topbar">
+    <div class="logo" onclick="navigate('/')">AE <span>Sports</span></div>
+    <div class="live-badge">
+        <div class="live-dot"></div>
+        LIVE DATA
+    </div>
+</div>
+
+<!-- League nav — hidden on match detail -->
+<div class="league-nav" id="league-nav"></div>
+
+<!-- ── VIEW: HOME ── -->
+<div class="view active" id="view-home">
+    <div class="main">
+        <div class="left-panel">
+            <div>
+                <div class="section-header">
+                    <div class="section-title">Recent Matches</div>
+                    <div class="section-line"></div>
+                </div>
+                <div class="matches-grid" id="matches-grid">
+                    <div class="loading">Loading matches...</div>
+                </div>
+            </div>
+            <div>
+                <div class="section-header">
+                    <div class="section-title">Standings</div>
+                    <div class="section-line"></div>
+                </div>
+                <div id="standings-wrap">
+                    <div class="loading">Loading standings...</div>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="sentiment-card">
+                <div class="section-header" style="margin-bottom:10px">
+                    <div class="section-title">Fan Sentiment</div>
+                    <div class="section-line"></div>
+                </div>
+                <div class="sub-tabs" id="sub-tabs"></div>
+                <div class="sentiment-summary">
+                    <div class="sent-stat"><div class="sent-stat-num positive-num" id="pos-count">-</div><div class="sent-stat-label">POSITIVE</div></div>
+                    <div class="sent-stat"><div class="sent-stat-num neutral-num"  id="neu-count">-</div><div class="sent-stat-label">NEUTRAL</div></div>
+                    <div class="sent-stat"><div class="sent-stat-num negative-num" id="neg-count">-</div><div class="sent-stat-label">NEGATIVE</div></div>
+                </div>
+                <div class="sentiment-bar-wrap">
+                    <div class="sentiment-bar">
+                        <div class="bar-pos" id="bar-pos" style="width:33%"></div>
+                        <div class="bar-neu" id="bar-neu" style="width:34%"></div>
+                        <div class="bar-neg" id="bar-neg" style="width:33%"></div>
+                    </div>
+                    <div class="bar-labels"><span>Positive</span><span>Neutral</span><span>Negative</span></div>
+                </div>
+                <div class="post-list" id="post-list">
+                    <div class="loading">Loading Reddit posts...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── VIEW: MATCH DETAIL ── -->
+<div class="view" id="view-match">
+    <div id="match-detail-content">
+        <div class="loading">Loading match...</div>
+    </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────
+const LEAGUES = {
+    "PL":  {name:"Premier League",          flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", sub:"PremierLeague"},
+    "PD":  {name:"La Liga",                 flag:"🇪🇸",  sub:"laliga"},
+    "CL":  {name:"Champions League",        flag:"🏆",   sub:"ChampionsLeague"},
+    "BL1": {name:"Bundesliga",              flag:"🇩🇪",  sub:"bundesliga"},
+    "SA":  {name:"Serie A",                 flag:"🇮🇹",  sub:"soccer"},
+    "WC":  {name:"World Cup",               flag:"🌍",   sub:"soccer"},
+};
+const REDDIT_SUBS = ["soccer","PremierLeague","laliga","ChampionsLeague","bundesliga"];
+
+let activeLeague = "PL";
+let activeSub    = "soccer";
+
+// ─── ROUTER ─────────────────────────────────────────────────────
+function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const isHome = id === 'view-home';
+    document.getElementById('league-nav').style.display = isHome ? 'flex' : 'none';
+}
+
+function navigate(path) {
+    history.pushState({}, '', path);
+    handleRoute(path);
+}
+
+function handleRoute(path) {
+    const matchRoute = path.match(/^\/match\/(\d+)/);
+    if (matchRoute) {
+        showView('view-match');
+        loadMatchDetail(matchRoute[1]);
+    } else {
+        showView('view-home');
+    }
+}
+
+window.addEventListener('popstate', () => handleRoute(location.pathname));
+
+// ─── LEAGUE TABS ────────────────────────────────────────────────
+const leagueNav = document.getElementById('league-nav');
+Object.entries(LEAGUES).forEach(([code, info]) => {
+    const btn = document.createElement('button');
+    btn.className = 'league-tab' + (code === activeLeague ? ' active' : '');
+    btn.textContent = `${info.flag} ${info.name}`;
+    btn.onclick = () => {
+        activeLeague = code;
+        document.querySelectorAll('.league-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadMatches();
+        loadStandings();
+    };
+    leagueNav.appendChild(btn);
+});
+
+// ─── SUBREDDIT TABS ─────────────────────────────────────────────
+const subTabsEl = document.getElementById('sub-tabs');
+REDDIT_SUBS.forEach(sub => {
+    const btn = document.createElement('button');
+    btn.className = 'sub-tab' + (sub === activeSub ? ' active' : '');
+    btn.textContent = `r/${sub}`;
+    btn.onclick = () => {
+        activeSub = sub;
+        document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadSentiment();
+    };
+    subTabsEl.appendChild(btn);
+});
+
+// ─── HOME LOADERS ────────────────────────────────────────────────
+async function loadMatches() {
+    const el = document.getElementById('matches-grid');
+    el.innerHTML = '<div class="loading">Loading matches...</div>';
+    try {
+        const res = await fetch(`/api/matches/${activeLeague}`);
+        const matches = await res.json();
+        if (!matches.length) {
+            el.innerHTML = '<div class="loading error">No matches found</div>';
+            return;
+        }
+        el.innerHTML = matches.map(m => {
+            const homeScore  = m.home_score !== null ? m.home_score : '-';
+            const awayScore  = m.away_score !== null ? m.away_score : '-';
+            const statusClass = m.status === 'IN_PLAY' ? 'status-live' :
+                                m.status === 'FINISHED' ? 'status-finished' : 'status-scheduled';
+            const statusText = m.status === 'IN_PLAY' ? '🔴 LIVE' :
+                               m.status === 'FINISHED' ? 'Full Time' :
+                               `${m.date} ${m.time} UTC`;
+            return `<div class="match-card" onclick="navigate('/match/${m.id}')">
+                <div class="match-league">${LEAGUES[activeLeague]?.flag} ${LEAGUES[activeLeague]?.name}</div>
+                <div class="match-teams">
+                    <div class="team-name">${m.home}</div>
+                    <div class="match-score">${homeScore} — ${awayScore}</div>
+                    <div class="team-name away">${m.away}</div>
+                </div>
+                <div class="match-status ${statusClass}">${statusText}</div>
+            </div>`;
+        }).join('');
+    } catch(e) {
+        el.innerHTML = '<div class="loading error">Failed to load matches</div>';
+    }
+}
+
+async function loadStandings() {
+    const el = document.getElementById('standings-wrap');
+    el.innerHTML = '<div class="loading">Loading standings...</div>';
+    try {
+        const res = await fetch(`/api/standings/${activeLeague}`);
+        const rows = await res.json();
+        if (!rows.length) {
+            el.innerHTML = '<div class="loading error">No standings found</div>';
+            return;
+        }
+        el.innerHTML = `<table class="standings-table">
+            <thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead>
+            <tbody>${rows.map(r => {
+                const posClass = r.pos === 1 ? 'pos-1' : r.pos <= 4 ? 'pos-2' : '';
+                return `<tr>
+                    <td class="pos-num ${posClass}">${r.pos}</td>
+                    <td class="team-row">${r.team}</td>
+                    <td>${r.played}</td><td>${r.won}</td><td>${r.draw}</td><td>${r.lost}</td>
+                    <td>${r.gd > 0 ? '+' : ''}${r.gd}</td>
+                    <td class="pts">${r.points}</td>
+                </tr>`;
+            }).join('')}</tbody>
+        </table>`;
+    } catch(e) {
+        el.innerHTML = '<div class="loading error">Failed to load standings</div>';
+    }
+}
+
+async function loadSentiment() {
+    const postList = document.getElementById('post-list');
+    postList.innerHTML = '<div class="loading">Analyzing Reddit sentiment...</div>';
+    try {
+        const res   = await fetch(`/api/sentiment/${activeSub}`);
+        const posts = await res.json();
+        const pos   = posts.filter(p => p.sentiment === 'positive').length;
+        const neg   = posts.filter(p => p.sentiment === 'negative').length;
+        const neu   = posts.filter(p => p.sentiment === 'neutral').length;
+        const total = posts.length || 1;
+
+        document.getElementById('pos-count').textContent = pos;
+        document.getElementById('neu-count').textContent = neu;
+        document.getElementById('neg-count').textContent = neg;
+        document.getElementById('bar-pos').style.width = `${(pos/total)*100}%`;
+        document.getElementById('bar-neu').style.width = `${(neu/total)*100}%`;
+        document.getElementById('bar-neg').style.width = `${(neg/total)*100}%`;
+
+        postList.innerHTML = posts.map(p => `
+            <a class="post-item ${p.sentiment}" href="${p.url}" target="_blank">
+                <div class="post-title">${p.title}</div>
+                <div class="post-score">↑${p.score.toLocaleString()}</div>
+            </a>
+        `).join('');
+    } catch(e) {
+        postList.innerHTML = '<div class="loading error">Failed to load sentiment</div>';
+    }
+}
+
+// ─── MATCH DETAIL LOADER ─────────────────────────────────────────
+async function loadMatchDetail(matchId) {
+    const el = document.getElementById('match-detail-content');
+    el.innerHTML = '<div class="loading">Loading match details...</div>';
+    try {
+        const res = await fetch(`/api/match/${matchId}`);
+        if (!res.ok) throw new Error('Not found');
+        const m = await res.json();
+
+        const homeScore = m.home_score !== null ? m.home_score : '-';
+        const awayScore = m.away_score !== null ? m.away_score : '-';
+        const htScore   = (m.home_ht !== null && m.away_ht !== null)
+            ? `HT: ${m.home_ht} — ${m.away_ht}` : '';
+
+        const statusText = m.status === 'IN_PLAY' ? '🔴 LIVE' :
+                           m.status === 'FINISHED' ? 'Full Time' :
+                           `${m.date} · ${m.time} UTC`;
+
+        // Goals HTML
+        const goalsHTML = m.goals.length ? m.goals.map(g => {
+            const typeTag = g.type === 'PENALTY' ? '<span class="goal-type-pen">PEN</span>' :
+                            g.type === 'OWN'     ? '<span class="goal-type-og">OG</span>'  : '';
+            const assistLine = g.assist ? `<div class="goal-assist">Assist: ${g.assist}</div>` : '';
+            return `<div class="goal-item">
+                <div class="goal-minute">${g.minute}'</div>
+                <div class="goal-info">
+                    <div class="goal-scorer">${g.scorer} ${typeTag}</div>
+                    ${assistLine}
+                    <div class="goal-team-badge">${g.team}</div>
+                </div>
+            </div>`;
+        }).join('') : '<div class="empty-state">No goal data available</div>';
+
+        // Bookings HTML
+        const bookingsHTML = m.bookings.length ? m.bookings.map(b => {
+            const icon = b.card === 'RED_CARD' ? '🟥' : '🟨';
+            const minClass = b.card === 'RED_CARD' ? 'red-minute' : '';
+            return `<div class="booking-item">
+                <span class="card-icon">${icon}</span>
+                <span class="booking-minute ${minClass}">${b.minute}'</span>
+                <span>${b.player}</span>
+                <span style="color:var(--muted);margin-left:auto;font-family:'DM Mono',monospace;font-size:0.65rem">${b.team}</span>
+            </div>`;
+        }).join('') : '<div class="empty-state">No bookings</div>';
+
+        // Subs HTML
+        const subsHTML = m.substitutions.length ? m.substitutions.map(s => `
+            <div class="sub-item">
+                <span class="sub-minute">${s.minute}'</span>
+                <span class="sub-out">↓ ${s.player_out}</span>
+                <span class="sub-arrow">→</span>
+                <span class="sub-in">↑ ${s.player_in}</span>
+                <span style="color:var(--muted);margin-left:auto;font-family:'DM Mono',monospace;font-size:0.65rem">${s.team}</span>
+            </div>
+        `).join('') : '<div class="empty-state">No substitution data</div>';
+
+        // Lineups HTML
+        const lineupHTML = (m.home_lineup.length || m.away_lineup.length) ? `
+            <div class="lineup-wrap">
+                <div class="lineup-col">
+                    <div class="lineup-col-title">${m.home}</div>
+                    ${m.home_lineup.map(p => `
+                        <div class="player-item">
+                            <span class="player-shirt">${p.shirt ?? ''}</span>
+                            <span class="player-pos">${(p.position || '').slice(0,3)}</span>
+                            <span>${p.name}</span>
+                        </div>`).join('')}
+                </div>
+                <div class="lineup-col">
+                    <div class="lineup-col-title">${m.away}</div>
+                    ${m.away_lineup.map(p => `
+                        <div class="player-item">
+                            <span class="player-shirt">${p.shirt ?? ''}</span>
+                            <span class="player-pos">${(p.position || '').slice(0,3)}</span>
+                            <span>${p.name}</span>
+                        </div>`).join('')}
+                </div>
+            </div>` : '<div class="empty-state">Lineup not available</div>';
+
+        el.innerHTML = `
+            <button class="back-btn" onclick="navigate('/')">← Back</button>
+
+            <div class="match-hero">
+                <div class="match-hero-competition">${m.competition} · ${statusText}</div>
+                <div class="match-hero-teams">
+                    <div class="hero-team">${m.home}</div>
+                    <div>
+                        <div class="hero-score">${homeScore} — ${awayScore}</div>
+                        ${htScore ? `<div class="hero-ht">${htScore}</div>` : ''}
+                    </div>
+                    <div class="hero-team away">${m.away}</div>
+                </div>
+                <div class="hero-meta">
+                    ${m.venue ? `<span>📍 ${m.venue}</span>` : ''}
+                    ${m.referee ? `<span>👨‍⚖️ ${m.referee}</span>` : ''}
+                    ${m.date ? `<span>📅 ${m.date}</span>` : ''}
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <div class="detail-card-title">Goals</div>
+                    ${goalsHTML}
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Bookings</div>
+                    ${bookingsHTML}
+                </div>
+            </div>
+
+            <div class="detail-grid" style="margin-bottom:16px">
+                <div class="detail-card">
+                    <div class="detail-card-title">Substitutions</div>
+                    ${subsHTML}
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Lineups</div>
+                    ${lineupHTML}
+                </div>
+            </div>
+        `;
+    } catch(e) {
+        el.innerHTML = `
+            <button class="back-btn" onclick="navigate('/')">← Back</button>
+            <div class="loading error">Failed to load match details. The free API tier may not support this endpoint.</div>
+        `;
+    }
+}
+
+// ─── INIT ────────────────────────────────────────────────────────
+handleRoute(location.pathname);
+if (location.pathname === '/') {
+    loadMatches();
+    loadStandings();
+    loadSentiment();
+}
+setInterval(() => {
+    if (location.pathname === '/') {
+        loadMatches();
+        loadSentiment();
+    }
+}, 120000);
+</script>
+</body>
+</html>
