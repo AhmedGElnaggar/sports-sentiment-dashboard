@@ -27,7 +27,6 @@
             overflow-x:hidden;
         }
 
-        /* TOP BAR */
         .topbar {
             display:flex;
             align-items:center;
@@ -69,7 +68,6 @@
             50%{opacity:0.4;transform:scale(0.8)}
         }
 
-        /* LEAGUE TABS */
         .league-nav {
             display:flex;
             gap:4px;
@@ -99,11 +97,9 @@
             font-weight:600;
         }
 
-        /* VIEWS */
         .view { display:none; }
         .view.active { display:block; }
 
-        /* MAIN LAYOUT */
         .main {
             display:grid;
             grid-template-columns:1fr 380px;
@@ -114,7 +110,6 @@
         }
         .left-panel { display:flex; flex-direction:column; gap:20px; }
 
-        /* SECTION HEADER */
         .section-header {
             display:flex;
             align-items:center;
@@ -129,7 +124,6 @@
         }
         .section-line { flex:1; height:1px; background:var(--border); }
 
-        /* MATCHES */
         .matches-grid {
             display:grid;
             grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
@@ -175,7 +169,6 @@
         .status-finished { color:var(--muted); }
         .status-scheduled { color:var(--accent2); }
 
-        /* STANDINGS */
         .standings-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
         .standings-table th {
             text-align:left; padding:6px 10px;
@@ -191,7 +184,6 @@
         .pts { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--accent); letter-spacing:1px; }
         .team-row { font-weight:500; }
 
-        /* SENTIMENT */
         .sentiment-card {
             background:var(--surface);
             border:1px solid var(--border);
@@ -215,7 +207,7 @@
         .sent-stat-label { font-size:0.6rem; font-family:'DM Mono', monospace; color:var(--muted); letter-spacing:1px; }
         .positive-num { color:var(--accent); }
         .negative-num { color:var(--red); }
-        .neutral-num { color:var(--muted); }
+        .neutral-num  { color:var(--muted); }
         .post-list { display:flex; flex-direction:column; gap:6px; max-height:500px; overflow-y:auto; }
         .post-item {
             display:flex; gap:10px; padding:8px 10px;
@@ -236,223 +228,73 @@
         .bar-neu { background:var(--muted); transition:width 0.5s; }
         .bar-labels { display:flex; justify-content:space-between; margin-top:4px; font-size:0.6rem; font-family:'DM Mono', monospace; color:var(--muted); }
 
-        /* ── MATCH DETAIL VIEW ── */
-        #view-match {
-            padding: 28px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        /* MATCH DETAIL */
+        #view-match { padding:28px; max-width:1100px; margin:0 auto; }
         .back-btn {
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:8px 16px;
-            border:1px solid var(--border);
-            border-radius:6px;
-            background:transparent;
-            color:var(--muted);
-            font-family:'DM Mono', monospace;
-            font-size:0.75rem;
-            letter-spacing:1px;
-            cursor:pointer;
-            margin-bottom:24px;
-            transition:all 0.2s;
+            display:inline-flex; align-items:center; gap:8px;
+            padding:8px 16px; border:1px solid var(--border);
+            border-radius:6px; background:transparent; color:var(--muted);
+            font-family:'DM Mono', monospace; font-size:0.75rem;
+            letter-spacing:1px; cursor:pointer; margin-bottom:24px; transition:all 0.2s;
         }
         .back-btn:hover { border-color:var(--accent); color:var(--accent); }
-
         .match-hero {
-            background:var(--surface);
-            border:1px solid var(--border);
-            border-radius:14px;
-            padding:32px;
-            text-align:center;
-            margin-bottom:20px;
+            background:var(--surface); border:1px solid var(--border);
+            border-radius:14px; padding:32px; text-align:center; margin-bottom:20px;
         }
         .match-hero-competition {
-            font-family:'DM Mono', monospace;
-            font-size:0.7rem;
-            letter-spacing:2px;
-            color:var(--muted);
-            margin-bottom:20px;
+            font-family:'DM Mono', monospace; font-size:0.7rem;
+            letter-spacing:2px; color:var(--muted); margin-bottom:20px;
         }
-        .match-hero-teams {
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:32px;
-        }
-        .hero-team {
-            flex:1;
-            font-size:1.6rem;
-            font-weight:700;
-            text-align:center;
-        }
-        .hero-team.away { text-align:center; }
+        .match-hero-teams { display:flex; align-items:center; justify-content:center; gap:32px; }
+        .hero-team { flex:1; font-size:1.6rem; font-weight:700; text-align:center; }
         .hero-score {
-            font-family:'Bebas Neue', sans-serif;
-            font-size:5rem;
-            letter-spacing:8px;
-            color:var(--accent);
-            line-height:1;
-            min-width:160px;
-            text-align:center;
+            font-family:'Bebas Neue', sans-serif; font-size:5rem;
+            letter-spacing:8px; color:var(--accent); line-height:1;
+            min-width:160px; text-align:center;
         }
-        .hero-ht {
-            font-family:'DM Mono', monospace;
-            font-size:0.65rem;
-            color:var(--muted);
-            letter-spacing:1px;
-            margin-top:8px;
-        }
+        .hero-ht { font-family:'DM Mono', monospace; font-size:0.65rem; color:var(--muted); letter-spacing:1px; margin-top:8px; }
         .hero-meta {
-            margin-top:16px;
-            display:flex;
-            justify-content:center;
-            gap:24px;
-            font-family:'DM Mono', monospace;
-            font-size:0.65rem;
-            color:var(--muted);
-            letter-spacing:1px;
+            margin-top:16px; display:flex; justify-content:center; gap:24px;
+            font-family:'DM Mono', monospace; font-size:0.65rem; color:var(--muted); letter-spacing:1px;
         }
-
-        .detail-grid {
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:16px;
-            margin-bottom:16px;
-        }
-        .detail-grid.three { grid-template-columns:1fr 1fr 1fr; }
-
-        .detail-card {
-            background:var(--surface);
-            border:1px solid var(--border);
-            border-radius:10px;
-            padding:16px;
-        }
+        .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+        .detail-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
         .detail-card-title {
-            font-family:'Bebas Neue', sans-serif;
-            font-size:0.9rem;
-            letter-spacing:3px;
-            color:var(--muted);
-            margin-bottom:12px;
+            font-family:'Bebas Neue', sans-serif; font-size:0.9rem;
+            letter-spacing:3px; color:var(--muted); margin-bottom:12px;
         }
-
-        /* GOAL ITEM */
-        .goal-item {
-            display:flex;
-            align-items:flex-start;
-            gap:12px;
-            padding:8px 0;
-            border-bottom:1px solid var(--border);
-        }
+        .goal-item { display:flex; align-items:flex-start; gap:12px; padding:8px 0; border-bottom:1px solid var(--border); }
         .goal-item:last-child { border-bottom:none; }
-        .goal-minute {
-            font-family:'Bebas Neue', sans-serif;
-            font-size:1rem;
-            color:var(--accent);
-            min-width:36px;
-            letter-spacing:1px;
-        }
+        .goal-minute { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--accent); min-width:36px; letter-spacing:1px; }
         .goal-info { flex:1; }
         .goal-scorer { font-weight:600; font-size:0.85rem; }
         .goal-assist { font-size:0.7rem; color:var(--muted); margin-top:2px; }
-        .goal-team-badge {
-            font-family:'DM Mono', monospace;
-            font-size:0.6rem;
-            color:var(--muted);
-            letter-spacing:1px;
-        }
+        .goal-team-badge { font-family:'DM Mono', monospace; font-size:0.6rem; color:var(--muted); letter-spacing:1px; }
         .goal-type-pen { color:var(--amber); font-size:0.65rem; font-family:'DM Mono', monospace; }
         .goal-type-og  { color:var(--red);   font-size:0.65rem; font-family:'DM Mono', monospace; }
-
-        /* BOOKING ITEM */
-        .booking-item {
-            display:flex;
-            align-items:center;
-            gap:12px;
-            padding:7px 0;
-            border-bottom:1px solid var(--border);
-            font-size:0.82rem;
-        }
+        .booking-item { display:flex; align-items:center; gap:12px; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.82rem; }
         .booking-item:last-child { border-bottom:none; }
         .card-icon { font-size:1rem; }
-        .booking-minute {
-            font-family:'Bebas Neue', sans-serif;
-            font-size:1rem;
-            color:var(--amber);
-            min-width:36px;
-        }
+        .booking-minute { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--amber); min-width:36px; }
         .red-minute { color:var(--red); }
-
-        /* SUB ITEM */
-        .sub-item {
-            display:flex;
-            align-items:center;
-            gap:10px;
-            padding:7px 0;
-            border-bottom:1px solid var(--border);
-            font-size:0.8rem;
-        }
+        .sub-item { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.8rem; }
         .sub-item:last-child { border-bottom:none; }
         .sub-minute { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--accent2); min-width:36px; }
         .sub-out { color:var(--red); }
         .sub-in  { color:var(--accent); }
         .sub-arrow { color:var(--muted); }
-
-        /* LINEUP */
         .lineup-wrap { display:flex; gap:16px; }
         .lineup-col { flex:1; }
-        .lineup-col-title {
-            font-family:'DM Mono', monospace;
-            font-size:0.65rem;
-            letter-spacing:1px;
-            color:var(--muted);
-            margin-bottom:8px;
-            text-align:center;
-        }
-        .player-item {
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:5px 8px;
-            border-radius:5px;
-            font-size:0.78rem;
-            margin-bottom:3px;
-        }
+        .lineup-col-title { font-family:'DM Mono', monospace; font-size:0.65rem; letter-spacing:1px; color:var(--muted); margin-bottom:8px; text-align:center; }
+        .player-item { display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:5px; font-size:0.78rem; margin-bottom:3px; }
         .player-item:hover { background:var(--surface2); }
-        .player-shirt {
-            font-family:'DM Mono', monospace;
-            font-size:0.65rem;
-            color:var(--muted);
-            min-width:20px;
-            text-align:right;
-        }
-        .player-pos {
-            font-family:'DM Mono', monospace;
-            font-size:0.6rem;
-            color:var(--accent2);
-            min-width:28px;
-        }
+        .player-shirt { font-family:'DM Mono', monospace; font-size:0.65rem; color:var(--muted); min-width:20px; text-align:right; }
+        .player-pos { font-family:'DM Mono', monospace; font-size:0.6rem; color:var(--accent2); min-width:28px; }
+        .empty-state { text-align:center; padding:20px; font-family:'DM Mono', monospace; font-size:0.75rem; color:var(--muted); letter-spacing:1px; }
 
-        .empty-state {
-            text-align:center;
-            padding:20px;
-            font-family:'DM Mono', monospace;
-            font-size:0.75rem;
-            color:var(--muted);
-            letter-spacing:1px;
-        }
-
-        .loading {
-            text-align:center;
-            padding:30px;
-            font-family:'DM Mono', monospace;
-            font-size:0.75rem;
-            color:var(--muted);
-            letter-spacing:2px;
-        }
+        .loading { text-align:center; padding:30px; font-family:'DM Mono', monospace; font-size:0.75rem; color:var(--muted); letter-spacing:2px; }
         .error { color:var(--red); }
-
         ::-webkit-scrollbar { width:4px; height:4px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:var(--muted); border-radius:2px; }
@@ -462,16 +304,12 @@
 
 <div class="topbar">
     <div class="logo" onclick="navigate('/')">AE <span>Sports</span></div>
-    <div class="live-badge">
-        <div class="live-dot"></div>
-        LIVE DATA
-    </div>
+    <div class="live-badge"><div class="live-dot"></div>LIVE DATA</div>
 </div>
 
-<!-- League nav — hidden on match detail -->
 <div class="league-nav" id="league-nav"></div>
 
-<!-- ── VIEW: HOME ── -->
+<!-- HOME VIEW -->
 <div class="view active" id="view-home">
     <div class="main">
         <div class="left-panel">
@@ -522,7 +360,7 @@
     </div>
 </div>
 
-<!-- ── VIEW: MATCH DETAIL ── -->
+<!-- MATCH DETAIL VIEW -->
 <div class="view" id="view-match">
     <div id="match-detail-content">
         <div class="loading">Loading match...</div>
@@ -530,33 +368,29 @@
 </div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────
 const LEAGUES = {
-    "PL":  {name:"Premier League",          flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", sub:"PremierLeague"},
-    "PD":  {name:"La Liga",                 flag:"🇪🇸",  sub:"laliga"},
-    "CL":  {name:"Champions League",        flag:"🏆",   sub:"ChampionsLeague"},
-    "BL1": {name:"Bundesliga",              flag:"🇩🇪",  sub:"bundesliga"},
-    "SA":  {name:"Serie A",                 flag:"🇮🇹",  sub:"soccer"},
-    "WC":  {name:"World Cup",               flag:"🌍",   sub:"soccer"},
+    "PL":  {name:"Premier League",   flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", sub:"PremierLeague"},
+    "PD":  {name:"La Liga",          flag:"🇪🇸",  sub:"laliga"},
+    "CL":  {name:"Champions League", flag:"🏆",   sub:"ChampionsLeague"},
+    "BL1": {name:"Bundesliga",       flag:"🇩🇪",  sub:"bundesliga"},
+    "SA":  {name:"Serie A",          flag:"🇮🇹",  sub:"soccer"},
+    "WC":  {name:"World Cup",        flag:"🌍",   sub:"soccer"},
 };
 const REDDIT_SUBS = ["soccer","PremierLeague","laliga","ChampionsLeague","bundesliga"];
 
 let activeLeague = "PL";
 let activeSub    = "soccer";
 
-// ─── ROUTER ─────────────────────────────────────────────────────
+// ROUTER
 function showView(id) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const isHome = id === 'view-home';
-    document.getElementById('league-nav').style.display = isHome ? 'flex' : 'none';
+    document.getElementById('league-nav').style.display = id === 'view-home' ? 'flex' : 'none';
 }
-
 function navigate(path) {
     history.pushState({}, '', path);
     handleRoute(path);
 }
-
 function handleRoute(path) {
     const matchRoute = path.match(/^\/match\/(\d+)/);
     if (matchRoute) {
@@ -566,10 +400,9 @@ function handleRoute(path) {
         showView('view-home');
     }
 }
-
 window.addEventListener('popstate', () => handleRoute(location.pathname));
 
-// ─── LEAGUE TABS ────────────────────────────────────────────────
+// LEAGUE TABS
 const leagueNav = document.getElementById('league-nav');
 Object.entries(LEAGUES).forEach(([code, info]) => {
     const btn = document.createElement('button');
@@ -585,7 +418,7 @@ Object.entries(LEAGUES).forEach(([code, info]) => {
     leagueNav.appendChild(btn);
 });
 
-// ─── SUBREDDIT TABS ─────────────────────────────────────────────
+// SUBREDDIT TABS
 const subTabsEl = document.getElementById('sub-tabs');
 REDDIT_SUBS.forEach(sub => {
     const btn = document.createElement('button');
@@ -600,25 +433,18 @@ REDDIT_SUBS.forEach(sub => {
     subTabsEl.appendChild(btn);
 });
 
-// ─── HOME LOADERS ────────────────────────────────────────────────
 async function loadMatches() {
     const el = document.getElementById('matches-grid');
     el.innerHTML = '<div class="loading">Loading matches...</div>';
     try {
         const res = await fetch(`/api/matches/${activeLeague}`);
         const matches = await res.json();
-        if (!matches.length) {
-            el.innerHTML = '<div class="loading error">No matches found</div>';
-            return;
-        }
+        if (!matches.length) { el.innerHTML = '<div class="loading error">No matches found</div>'; return; }
         el.innerHTML = matches.map(m => {
-            const homeScore  = m.home_score !== null ? m.home_score : '-';
-            const awayScore  = m.away_score !== null ? m.away_score : '-';
-            const statusClass = m.status === 'IN_PLAY' ? 'status-live' :
-                                m.status === 'FINISHED' ? 'status-finished' : 'status-scheduled';
-            const statusText = m.status === 'IN_PLAY' ? '🔴 LIVE' :
-                               m.status === 'FINISHED' ? 'Full Time' :
-                               `${m.date} ${m.time} UTC`;
+            const homeScore   = m.home_score !== null ? m.home_score : '-';
+            const awayScore   = m.away_score !== null ? m.away_score : '-';
+            const statusClass = m.status === 'IN_PLAY' ? 'status-live' : m.status === 'FINISHED' ? 'status-finished' : 'status-scheduled';
+            const statusText  = m.status === 'IN_PLAY' ? '🔴 LIVE' : m.status === 'FINISHED' ? 'Full Time' : `${m.date} ${m.time} UTC`;
             return `<div class="match-card" onclick="navigate('/match/${m.id}')">
                 <div class="match-league">${LEAGUES[activeLeague]?.flag} ${LEAGUES[activeLeague]?.name}</div>
                 <div class="match-teams">
@@ -629,9 +455,7 @@ async function loadMatches() {
                 <div class="match-status ${statusClass}">${statusText}</div>
             </div>`;
         }).join('');
-    } catch(e) {
-        el.innerHTML = '<div class="loading error">Failed to load matches</div>';
-    }
+    } catch(e) { document.getElementById('matches-grid').innerHTML = '<div class="loading error">Failed to load matches</div>'; }
 }
 
 async function loadStandings() {
@@ -640,10 +464,7 @@ async function loadStandings() {
     try {
         const res = await fetch(`/api/standings/${activeLeague}`);
         const rows = await res.json();
-        if (!rows.length) {
-            el.innerHTML = '<div class="loading error">No standings found</div>';
-            return;
-        }
+        if (!rows.length) { el.innerHTML = '<div class="loading error">No standings found</div>'; return; }
         el.innerHTML = `<table class="standings-table">
             <thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead>
             <tbody>${rows.map(r => {
@@ -657,9 +478,7 @@ async function loadStandings() {
                 </tr>`;
             }).join('')}</tbody>
         </table>`;
-    } catch(e) {
-        el.innerHTML = '<div class="loading error">Failed to load standings</div>';
-    }
+    } catch(e) { document.getElementById('standings-wrap').innerHTML = '<div class="loading error">Failed to load standings</div>'; }
 }
 
 async function loadSentiment() {
@@ -672,26 +491,20 @@ async function loadSentiment() {
         const neg   = posts.filter(p => p.sentiment === 'negative').length;
         const neu   = posts.filter(p => p.sentiment === 'neutral').length;
         const total = posts.length || 1;
-
         document.getElementById('pos-count').textContent = pos;
         document.getElementById('neu-count').textContent = neu;
         document.getElementById('neg-count').textContent = neg;
         document.getElementById('bar-pos').style.width = `${(pos/total)*100}%`;
         document.getElementById('bar-neu').style.width = `${(neu/total)*100}%`;
         document.getElementById('bar-neg').style.width = `${(neg/total)*100}%`;
-
         postList.innerHTML = posts.map(p => `
             <a class="post-item ${p.sentiment}" href="${p.url}" target="_blank">
                 <div class="post-title">${p.title}</div>
                 <div class="post-score">↑${p.score.toLocaleString()}</div>
-            </a>
-        `).join('');
-    } catch(e) {
-        postList.innerHTML = '<div class="loading error">Failed to load sentiment</div>';
-    }
+            </a>`).join('');
+    } catch(e) { document.getElementById('post-list').innerHTML = '<div class="loading error">Failed to load sentiment</div>'; }
 }
 
-// ─── MATCH DETAIL LOADER ─────────────────────────────────────────
 async function loadMatchDetail(matchId) {
     const el = document.getElementById('match-detail-content');
     el.innerHTML = '<div class="loading">Loading match details...</div>';
@@ -702,17 +515,11 @@ async function loadMatchDetail(matchId) {
 
         const homeScore = m.home_score !== null ? m.home_score : '-';
         const awayScore = m.away_score !== null ? m.away_score : '-';
-        const htScore   = (m.home_ht !== null && m.away_ht !== null)
-            ? `HT: ${m.home_ht} — ${m.away_ht}` : '';
+        const htScore   = (m.home_ht !== null && m.away_ht !== null) ? `HT: ${m.home_ht} — ${m.away_ht}` : '';
+        const statusText = m.status === 'IN_PLAY' ? '🔴 LIVE' : m.status === 'FINISHED' ? 'Full Time' : `${m.date} · ${m.time} UTC`;
 
-        const statusText = m.status === 'IN_PLAY' ? '🔴 LIVE' :
-                           m.status === 'FINISHED' ? 'Full Time' :
-                           `${m.date} · ${m.time} UTC`;
-
-        // Goals HTML
         const goalsHTML = m.goals.length ? m.goals.map(g => {
-            const typeTag = g.type === 'PENALTY' ? '<span class="goal-type-pen">PEN</span>' :
-                            g.type === 'OWN'     ? '<span class="goal-type-og">OG</span>'  : '';
+            const typeTag   = g.type === 'PENALTY' ? '<span class="goal-type-pen">PEN</span>' : g.type === 'OWN' ? '<span class="goal-type-og">OG</span>' : '';
             const assistLine = g.assist ? `<div class="goal-assist">Assist: ${g.assist}</div>` : '';
             return `<div class="goal-item">
                 <div class="goal-minute">${g.minute}'</div>
@@ -724,7 +531,6 @@ async function loadMatchDetail(matchId) {
             </div>`;
         }).join('') : '<div class="empty-state">No goal data available</div>';
 
-        // Bookings HTML
         const bookingsHTML = m.bookings.length ? m.bookings.map(b => {
             const icon = b.card === 'RED_CARD' ? '🟥' : '🟨';
             const minClass = b.card === 'RED_CARD' ? 'red-minute' : '';
@@ -736,7 +542,6 @@ async function loadMatchDetail(matchId) {
             </div>`;
         }).join('') : '<div class="empty-state">No bookings</div>';
 
-        // Subs HTML
         const subsHTML = m.substitutions.length ? m.substitutions.map(s => `
             <div class="sub-item">
                 <span class="sub-minute">${s.minute}'</span>
@@ -744,35 +549,30 @@ async function loadMatchDetail(matchId) {
                 <span class="sub-arrow">→</span>
                 <span class="sub-in">↑ ${s.player_in}</span>
                 <span style="color:var(--muted);margin-left:auto;font-family:'DM Mono',monospace;font-size:0.65rem">${s.team}</span>
-            </div>
-        `).join('') : '<div class="empty-state">No substitution data</div>';
+            </div>`).join('') : '<div class="empty-state">No substitution data</div>';
 
-        // Lineups HTML
         const lineupHTML = (m.home_lineup.length || m.away_lineup.length) ? `
             <div class="lineup-wrap">
                 <div class="lineup-col">
                     <div class="lineup-col-title">${m.home}</div>
-                    ${m.home_lineup.map(p => `
-                        <div class="player-item">
-                            <span class="player-shirt">${p.shirt ?? ''}</span>
-                            <span class="player-pos">${(p.position || '').slice(0,3)}</span>
-                            <span>${p.name}</span>
-                        </div>`).join('')}
+                    ${m.home_lineup.map(p => `<div class="player-item">
+                        <span class="player-shirt">${p.shirt ?? ''}</span>
+                        <span class="player-pos">${(p.position||'').slice(0,3)}</span>
+                        <span>${p.name}</span>
+                    </div>`).join('')}
                 </div>
                 <div class="lineup-col">
                     <div class="lineup-col-title">${m.away}</div>
-                    ${m.away_lineup.map(p => `
-                        <div class="player-item">
-                            <span class="player-shirt">${p.shirt ?? ''}</span>
-                            <span class="player-pos">${(p.position || '').slice(0,3)}</span>
-                            <span>${p.name}</span>
-                        </div>`).join('')}
+                    ${m.away_lineup.map(p => `<div class="player-item">
+                        <span class="player-shirt">${p.shirt ?? ''}</span>
+                        <span class="player-pos">${(p.position||'').slice(0,3)}</span>
+                        <span>${p.name}</span>
+                    </div>`).join('')}
                 </div>
             </div>` : '<div class="empty-state">Lineup not available</div>';
 
         el.innerHTML = `
             <button class="back-btn" onclick="navigate('/')">← Back</button>
-
             <div class="match-hero">
                 <div class="match-hero-competition">${m.competition} · ${statusText}</div>
                 <div class="match-hero-teams">
@@ -781,46 +581,30 @@ async function loadMatchDetail(matchId) {
                         <div class="hero-score">${homeScore} — ${awayScore}</div>
                         ${htScore ? `<div class="hero-ht">${htScore}</div>` : ''}
                     </div>
-                    <div class="hero-team away">${m.away}</div>
+                    <div class="hero-team">${m.away}</div>
                 </div>
                 <div class="hero-meta">
-                    ${m.venue ? `<span>📍 ${m.venue}</span>` : ''}
+                    ${m.venue   ? `<span>📍 ${m.venue}</span>`   : ''}
                     ${m.referee ? `<span>👨‍⚖️ ${m.referee}</span>` : ''}
-                    ${m.date ? `<span>📅 ${m.date}</span>` : ''}
+                    ${m.date    ? `<span>📅 ${m.date}</span>`    : ''}
                 </div>
             </div>
-
             <div class="detail-grid">
-                <div class="detail-card">
-                    <div class="detail-card-title">Goals</div>
-                    ${goalsHTML}
-                </div>
-                <div class="detail-card">
-                    <div class="detail-card-title">Bookings</div>
-                    ${bookingsHTML}
-                </div>
+                <div class="detail-card"><div class="detail-card-title">Goals</div>${goalsHTML}</div>
+                <div class="detail-card"><div class="detail-card-title">Bookings</div>${bookingsHTML}</div>
             </div>
-
-            <div class="detail-grid" style="margin-bottom:16px">
-                <div class="detail-card">
-                    <div class="detail-card-title">Substitutions</div>
-                    ${subsHTML}
-                </div>
-                <div class="detail-card">
-                    <div class="detail-card-title">Lineups</div>
-                    ${lineupHTML}
-                </div>
-            </div>
-        `;
+            <div class="detail-grid">
+                <div class="detail-card"><div class="detail-card-title">Substitutions</div>${subsHTML}</div>
+                <div class="detail-card"><div class="detail-card-title">Lineups</div>${lineupHTML}</div>
+            </div>`;
     } catch(e) {
         el.innerHTML = `
             <button class="back-btn" onclick="navigate('/')">← Back</button>
-            <div class="loading error">Failed to load match details. The free API tier may not support this endpoint.</div>
-        `;
+            <div class="loading error">Failed to load match details. The free API tier may not support this endpoint.</div>`;
     }
 }
 
-// ─── INIT ────────────────────────────────────────────────────────
+// INIT
 handleRoute(location.pathname);
 if (location.pathname === '/') {
     loadMatches();
@@ -828,10 +612,7 @@ if (location.pathname === '/') {
     loadSentiment();
 }
 setInterval(() => {
-    if (location.pathname === '/') {
-        loadMatches();
-        loadSentiment();
-    }
+    if (location.pathname === '/') { loadMatches(); loadSentiment(); }
 }, 120000);
 </script>
 </body>

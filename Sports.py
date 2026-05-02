@@ -18,12 +18,12 @@ FOOTBALL_BASE    = "https://api.football-data.org/v4"
 REDDIT_BASE      = "https://www.reddit.com"
 
 LEAGUES = {
-    "PL":  {"name": "Premier League",          "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
-    "PD":  {"name": "La Liga",                 "flag": "🇪🇸"},
-    "CL":  {"name": "Champions League",        "flag": "🏆"},
-    "BL1": {"name": "Bundesliga",              "flag": "🇩🇪"},
-    "SA":  {"name": "Serie A",                 "flag": "🇮🇹"},
-    "WC":  {"name": "World Cup",               "flag": "🌍"},
+    "PL":  {"name": "Premier League",   "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
+    "PD":  {"name": "La Liga",          "flag": "🇪🇸"},
+    "CL":  {"name": "Champions League", "flag": "🏆"},
+    "BL1": {"name": "Bundesliga",       "flag": "🇩🇪"},
+    "SA":  {"name": "Serie A",          "flag": "🇮🇹"},
+    "WC":  {"name": "World Cup",        "flag": "🌍"},
 }
 
 REDDIT_SUBS = ["soccer", "PremierLeague", "laliga", "ChampionsLeague", "bundesliga"]
@@ -160,11 +160,22 @@ def fetch_matches(league_code):
                 "date":       m["utcDate"][:10],
                 "time":       m["utcDate"][11:16],
             })
+        # Save to database
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        for m in matches:
+            c.execute('''INSERT OR REPLACE INTO matches
+                (id, league, home_team, away_team, home_score, away_score, status, match_date, fetched_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (m["id"], league_code, m["home"], m["away"],
+                 m["home_score"], m["away_score"], m["status"],
+                 m["date"], datetime.utcnow().isoformat()))
+        conn.commit()
+        conn.close()
         return matches
     except Exception as e:
         print(f"Football API error: {e}")
         return []
-
 def fetch_standings(league_code):
     headers = {"X-Auth-Token": FOOTBALL_API_KEY}
     try:
@@ -177,7 +188,7 @@ def fetch_standings(league_code):
             return []
         data = res.json()
         table = data.get("standings", [{}])[0].get("table", [])
-        return [{
+        result = [{
             "pos":    t["position"],
             "team":   get_team_name(t["team"]),
             "played": t["playedGames"],
@@ -187,6 +198,20 @@ def fetch_standings(league_code):
             "points": t["points"],
             "gd":     t["goalDifference"],
         } for t in table[:10]]
+        # Save to database
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("DELETE FROM standings WHERE league = ?", (league_code,))
+        for t in result:
+            c.execute('''INSERT INTO standings 
+                (league, position, team, played, won, draw, lost, points, fetched_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (league_code, t["pos"], t["team"], t["played"],
+                 t["won"], t["draw"], t["lost"], t["points"],
+                 datetime.utcnow().isoformat()))
+        conn.commit()
+        conn.close()
+        return result
     except Exception as e:
         print(f"Standings error: {e}")
         return []
@@ -231,18 +256,16 @@ def fetch_match_detail(match_id):
             return None
         m = res.json()
 
-        # Goals
         goals = []
         for g in m.get("goals", []):
             goals.append({
-                "minute":  g.get("minute"),
-                "scorer":  g.get("scorer", {}).get("name", "Unknown"),
-                "assist":  g.get("assist", {}).get("name") if g.get("assist") else None,
-                "team":    get_team_name(g.get("team", {})),
-                "type":    g.get("type", "REGULAR"),
+                "minute": g.get("minute"),
+                "scorer": g.get("scorer", {}).get("name", "Unknown"),
+                "assist": g.get("assist", {}).get("name") if g.get("assist") else None,
+                "team":   get_team_name(g.get("team", {})),
+                "type":   g.get("type", "REGULAR"),
             })
 
-        # Bookings
         bookings = []
         for b in m.get("bookings", []):
             bookings.append({
@@ -252,21 +275,18 @@ def fetch_match_detail(match_id):
                 "card":   b.get("card"),
             })
 
-        # Substitutions
         subs = []
         for s in m.get("substitutions", []):
             subs.append({
-                "minute":  s.get("minute"),
+                "minute":     s.get("minute"),
                 "player_out": s.get("playerOut", {}).get("name", "Unknown"),
-                "player_in":  s.get("playerIn", {}).get("name", "Unknown"),
-                "team":    get_team_name(s.get("team", {})),
+                "player_in":  s.get("playerIn",  {}).get("name", "Unknown"),
+                "team":       get_team_name(s.get("team", {})),
             })
 
-        # Lineups
         home_lineup = []
         away_lineup = []
         for lineup in m.get("lineups", []):
-            team_name = get_team_name(lineup.get("team", {}))
             players = [{
                 "name":     p.get("name", "Unknown"),
                 "position": p.get("position", ""),
@@ -278,25 +298,25 @@ def fetch_match_detail(match_id):
                 away_lineup = players
 
         return {
-            "id":           m["id"],
-            "competition":  m.get("competition", {}).get("name", ""),
-            "matchday":     m.get("matchday"),
-            "home":         get_team_name(m["homeTeam"]),
-            "away":         get_team_name(m["awayTeam"]),
-            "home_score":   m["score"]["fullTime"]["home"],
-            "away_score":   m["score"]["fullTime"]["away"],
-            "home_ht":      m["score"]["halfTime"]["home"],
-            "away_ht":      m["score"]["halfTime"]["away"],
-            "status":       m["status"],
-            "date":         m["utcDate"][:10],
-            "time":         m["utcDate"][11:16],
-            "venue":        m.get("venue", ""),
-            "referee":      m.get("referees", [{}])[0].get("name", "") if m.get("referees") else "",
-            "goals":        goals,
-            "bookings":     bookings,
+            "id":            m["id"],
+            "competition":   m.get("competition", {}).get("name", ""),
+            "matchday":      m.get("matchday"),
+            "home":          get_team_name(m["homeTeam"]),
+            "away":          get_team_name(m["awayTeam"]),
+            "home_score":    m["score"]["fullTime"]["home"],
+            "away_score":    m["score"]["fullTime"]["away"],
+            "home_ht":       m["score"]["halfTime"]["home"],
+            "away_ht":       m["score"]["halfTime"]["away"],
+            "status":        m["status"],
+            "date":          m["utcDate"][:10],
+            "time":          m["utcDate"][11:16],
+            "venue":         m.get("venue", ""),
+            "referee":       m.get("referees", [{}])[0].get("name", "") if m.get("referees") else "",
+            "goals":         goals,
+            "bookings":      bookings,
             "substitutions": subs,
-            "home_lineup":  home_lineup,
-            "away_lineup":  away_lineup,
+            "home_lineup":   home_lineup,
+            "away_lineup":   away_lineup,
         }
     except Exception as e:
         print(f"Match detail error: {e}")
@@ -307,7 +327,6 @@ def fetch_match_detail(match_id):
 def index():
     return render_template("index.html")
 
-# SPA catch-all — let the frontend router handle /match/<id>
 @app.route("/match/<int:match_id>")
 def match_page(match_id):
     return render_template("index.html")
